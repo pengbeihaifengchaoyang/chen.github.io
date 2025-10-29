@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>王心雨生日快乐</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  <!-- 生日快乐歌音频（已修改为本地文件） -->
+  <audio id="birthdaySong" loop>
+    <source src="生日快乐.mp3" type="audio/mpeg"> <!-- 这里已改为你的本地MP3文件 -->
+   您的浏览器不支持音频播放
+   </audio>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#FF69B4',
+            secondary: '#FFD700',
+            accent: '#9370DB',
+            light: '#FFF0F5',
+            cake: '#FF8FB1',
+            cream: '#FFF5F7',
+            strawberry: '#E53935',
+            blueberry: '#3949AB'
+          },
+          fontFamily: {
+            birthday: ['"Comic Sans MS"', '"Marker Felt"', 'cursive'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      .text-shadow-lg {
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+      }
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+      .animate-float-slow {
+        animation: float 4s ease-in-out infinite;
+      }
+      .animate-float-fast {
+        animation: float 2s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .candle-flame {
+        animation: flicker 1s infinite alternate;
+      }
+      .heart {
+        position: absolute;
+        transform: rotate(45deg);
+        animation: float 3s ease-in-out infinite;
+      }
+      .heart:before, .heart:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: inherit;
+        border-radius: 50%;
+      }
+      .heart:before {
+        top: -50%;
+        left: 0;
+      }
+      .heart:after {
+        top: 0;
+        left: -50%;
+      }
+      .firework {
+        position: absolute;
+        pointer-events: none;
+      }
+      .cream-drip {
+        border-radius: 0 0 50% 50%;
+        animation: drip 4s infinite alternate;
+      }
+      .strawberry {
+        transform-origin: bottom center;
+        animation: swing 3s ease-in-out infinite;
+      }
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(45deg);
+      }
+      50% {
+        transform: translateY(-15px) rotate(45deg);
+      }
+    }
+
+    @keyframes flicker {
+      0% {
+        transform: scale(1) translateY(0);
+        opacity: 0.9;
+      }
+      100% {
+        transform: scale(1.1) translateY(-2px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes drip {
+      0% {
+        transform: scaleY(1);
+      }
+      100% {
+        transform: scaleY(1.1);
+      }
+    }
+
+    @keyframes swing {
+      0%, 100% {
+        transform: rotate(-5deg);
+      }
+      50% {
+        transform: rotate(5deg);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-light to-pink-100 min-h-screen overflow-x-hidden relative">
+  <div id="hearts-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+  <header class="pt-10 pb-5 text-center relative z-10">
+    <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-birthday font-bold text-primary text-shadow-lg animate-pulse-slow">
+      生日快乐，王心雨！
+    </h1>
+    <p class="text-[clamp(1rem,2vw,1.5rem)] text-accent mt-3 font-birthday">
+      愿你每天都像今天一样开心快乐！
+    </p>
+  </header>
+
+  <main class="container mx-auto px-4 py-8 relative z-10 flex flex-col items-center">
+    <!-- 优化后的矩形两层蛋糕 -->
+    <div class="relative w-[clamp(250px,60vw,500px)] h-[clamp(250px,60vw,450px)] my-8 animate-float-slow">
+      <!-- 蛋糕托盘 -->
+      <div class="absolute bottom-[-10px] left-1/2 transform -translate-x-1/2 w-full h-4 bg-amber-800 rounded-full"></div>
+      
+      <!-- 蛋糕底座（矩形） -->
+      <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4/5 h-1/3 bg-cake rounded-t-lg border-4 border-pink-700 overflow-hidden">
+        <!-- 底座装饰条纹 -->
+        <div class="absolute top-1/4 w-full h-1 bg-pink-300 opacity-70"></div>
+        <div class="absolute top-2/4 w-full h-1 bg-pink-300 opacity-70"></div>
+        <div class="absolute top-3/4 w-full h-1 bg-pink-300 opacity-70"></div>
+      </div>
+      
+      <!-- 底座奶油边缘 -->
+      <div class="absolute bottom-[33%] left-[15%] w-[15%] h-4 bg-cream cream-drip"></div>
+      <div class="absolute bottom-[33%] left-[40%] w-[20%] h-5 bg-cream cream-drip"></div>
+      <div class="absolute bottom-[33%] left-[70%] w-[15%] h-4 bg-cream cream-drip"></div>
+      
+      <!-- 蛋糕上层（矩形） -->
+      <div class="absolute bottom-[30%] left-1/2 transform -translate-x-1/2 w-3/5 h-1/3 bg-accent rounded-t-lg border-4 border-purple-800 overflow-hidden">
+        <!-- 上层装饰点 -->
+        <div class="absolute top-1/3 left-1/4 w-2 h-2 bg-purple-200 rounded-full"></div>
+        <div class="absolute top-1/3 left-2/4 w-2 h-2 bg-purple-200 rounded-full"></div>
+        <div class="absolute top-1/3 left-3/4 w-2 h-2 bg-purple-200 rounded-full"></div>
+        <div class="absolute top-2/3 left-1/4 w-2 h-2 bg-purple-200 rounded-full"></div>
+        <div class="absolute top-2/3 left-2/4 w-2 h-2 bg-purple-200 rounded-full"></div>
+        <div class="absolute top-2/3 left-3/4 w-2 h-2 bg-purple-200 rounded-full"></div>
+      </div>
+      
+      <!-- 上层奶油边缘 -->
+      <div class="absolute bottom-[63%] left-[25%] w-[12%] h-4 bg-cream cream-drip"></div>
+      <div class="absolute bottom-[63%] left-[45%] w-[15%] h-5 bg-cream cream-drip"></div>
+      <div class="absolute bottom-[63%] left-[68%] w-[12%] h-4 bg-cream cream-drip"></div>
+      
+      <!-- 蛋糕顶部（承载蜡烛的平面） -->
+      <div class="absolute bottom-[60%] left-1/2 transform -translate-x-1/2 w-2/5 h-6 bg-accent rounded-sm"></div>
+      
+      <!-- 水果装饰 -->
+      <!-- 草莓 -->
+      <div class="strawberry absolute bottom-[60%] left-[25%] w-8 h-8">
+        <div class="w-full h-3/4 bg-strawberry rounded-full"></div>
+        <div class="w-1 h-2 bg-green-500 absolute left-1/2 transform -translate-x-1/2 -top-1"></div>
+      </div>
+      <div class="strawberry absolute bottom-[60%] left-[68%] w-8 h-8">
+        <div class="w-full h-3/4 bg-strawberry rounded-full"></div>
+        <div class="w-1 h-2 bg-green-500 absolute left-1/2 transform -translate-x-1/2 -top-1"></div>
+      </div>
+      
+      <!-- 蓝莓 -->
+      <div class="absolute bottom-[45%] left-[20%] w-5 h-5 bg-blueberry rounded-full animate-float-slow"></div>
+      <div class="absolute bottom-[45%] left-[75%] w-5 h-5 bg-blueberry rounded-full animate-float"></div>
+      <div class="absolute bottom-[20%] left-[30%] w-5 h-5 bg-blueberry rounded-full animate-float"></div>
+      <div class="absolute bottom-[20%] left-[65%] w-5 h-5 bg-blueberry rounded-full animate-float-slow"></div>
+      
+      <!-- 糖珠装饰 -->
+      <div class="absolute bottom-[35%] left-[22%] w-2 h-2 bg-white rounded-full"></div>
+      <div class="absolute bottom-[35%] left-[73%] w-2 h-2 bg-white rounded-full"></div>
+      <div class="absolute bottom-[15%] left-[35%] w-2 h-2 bg-white rounded-full"></div>
+      <div class="absolute bottom-[15%] left-[60%] w-2 h-2 bg-white rounded-full"></div>
+      
+      <!-- 蜡烛（带彩色条纹） -->
+      <div id="candle1" class="candle absolute bottom-[60%] left-[38%] cursor-pointer">
+        <div class="w-3 h-12 bg-white border border-gray-300 rounded-sm relative overflow-hidden">
+          <div class="absolute top-0 w-full h-1/3 bg-primary"></div>
+        </div>
+        <div class="candle-flame absolute top-[-8px] left-1/2 transform -translate-x-1/2 w-3 h-5 bg-secondary rounded-full"></div>
+      </div>
+      <div id="candle2" class="candle absolute bottom-[60%] left-[46%] cursor-pointer">
+        <div class="w-3 h-16 bg-white border border-gray-300 rounded-sm relative overflow-hidden">
+          <div class="absolute top-0 w-full h-1/3 bg-accent"></div>
+        </div>
+        <div class="candle-flame absolute top-[-8px] left-1/2 transform -translate-x-1/2 w-3 h-5 bg-secondary rounded-full"></div>
+      </div>
+      <div id="candle3" class="candle absolute bottom-[60%] left-[54%] cursor-pointer">
+        <div class="w-3 h-14 bg-white border border-gray-300 rounded-sm relative overflow-hidden">
+          <div class="absolute top-0 w-full h-1/3 bg-blue-500"></div>
+        </div>
+        <div class="candle-flame absolute top-[-8px] left-1/2 transform -translate-x-1/2 w-3 h-5 bg-secondary rounded-full"></div>
+      </div>
+      <div id="candle4" class="candle absolute bottom-[60%] left-[62%] cursor-pointer">
+        <div class="w-3 h-10 bg-white border border-gray-300 rounded-sm relative overflow-hidden">
+          <div class="absolute top-0 w-full h-1/3 bg-green-500"></div>
+        </div>
+        <div class="candle-flame absolute top-[-8px] left-1/2 transform -translate-x-1/2 w-3 h-5 bg-secondary rounded-full"></div>
+      </div>
+    </div>
+
+    <div class="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg max-w-lg w-full text-center mb-10 transform transition-all hover:shadow-xl hover:scale-[1.02]">
+      <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-700 leading-relaxed">
+        亲爱的王心雨，在这个特别的日子里，愿所有的美好与幸运都围绕着你。
+        愿你的每一个梦想都能实现，每一天都充满阳光和欢笑。生日快乐！
+      </p>
+    </div>
+
+    <button id="firework-btn" class="bg-primary hover:bg-pink-600 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition hover:scale-105 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:ring-opacity-50 mb-8">
+      <i class="fa fa-rocket mr-2"></i> 点击放烟花
+    </button>
+
+    <div class="flex items-center gap-3 text-accent font-birthday text-[clamp(0.9rem,1.5vw,1.1rem)] mb-4">
+      <i class="fa fa-music"></i>
+      <button id="toggle-music" class="hover:underline">
+        <span id="music-status">播放音乐</span>
+      </button>
+    </div>
+
+    <p class="text-accent font-birthday text-[clamp(0.9rem,1.5vw,1.1rem)]">
+      <i class="fa fa-lightbulb-o mr-1"></i> 点击蜡烛可以吹灭哦！
+    </p>
+  </main>
+
+  <footer class="text-center py-6 text-gray-500 text-sm relative z-10 mt-12">
+    <p>祝王心雨生日快乐 | 永远幸福快乐</p>
+  </footer>
+
+  <div id="fireworks-container" class="fixed inset-0 pointer-events-none z-20"></div>
+
+  <script>
+    // 音频控制
+    const birthdaySong = document.getElementById('birthdaySong');
+    const toggleMusicBtn = document.getElementById('toggle-music');
+    const musicStatus = document.getElementById('music-status');
+    let isPlaying = false;
+    
+    // 尝试播放音乐（处理浏览器自动播放限制）
+    function tryPlayMusic() {
+      birthdaySong.play().then(() => {
+        isPlaying = true;
+        musicStatus.textContent = '暂停音乐';
+      }).catch(err => {
+        console.log('自动播放失败，需要用户交互后才能播放:', err);
+        isPlaying = false;
+        musicStatus.textContent = '播放音乐';
+      });
+    }
+    
+    // 页面加载后尝试播放
+    window.addEventListener('click', tryPlayMusic, { once: true });
+    
+    toggleMusicBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        birthdaySong.pause();
+        musicStatus.textContent = '播放音乐';
+      } else {
+        birthdaySong.play();
+        musicStatus.textContent = '暂停音乐';
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // 创建漂浮爱心
+    function createHearts() {
+      const container = document.getElementById('hearts-container');
+      const colors = ['#FF69B4', '#FF4081', '#C2185B', '#E91E63', '#FF80AB'];
+      
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        const size = Math.random() * 20 + 10;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const left = Math.random() * 100;
+        const delay = Math.random() * 5;
+        const duration = Math.random() * 3 + 3;
+        
+        heart.classList.add('heart');
+        heart.style.width = `${size}px`;
+        heart.style.height = `${size}px`;
+        heart.style.backgroundColor = color;
+        heart.style.left = `${left}%`;
+        heart.style.top = `${Math.random() * 100 + 100}%`;
+        heart.style.animationDelay = `${delay}s`;
+        heart.style.animationDuration = `${duration}s`;
+        heart.style.opacity = Math.random() * 0.7 + 0.3;
+        
+        container.appendChild(heart);
+        
+        setTimeout(() => {
+          heart.style.transition = `transform 15s linear, opacity 15s linear`;
+          heart.style.transform = `translateY(-150vh) rotate(45deg)`;
+          heart.style.opacity = 0;
+        }, 100);
+        
+        setTimeout(() => {
+          if (container.contains(heart)) {
+            container.removeChild(heart);
+          }
+          if (document.body.contains(container)) {
+            setTimeout(createHearts, 1000);
+          }
+        }, 15000);
+      }
+    }
+
+    // 蜡烛交互
+    function setupCandles() {
+      const candles = document.querySelectorAll('.candle');
+      candles.forEach(candle => {
+        const flame = candle.querySelector('.candle-flame');
+        let isLit = true;
+        
+        candle.addEventListener('click', () => {
+          isLit = !isLit;
+          if (isLit) {
+            flame.style.display = 'block';
+            flame.classList.add('candle-flame');
+          } else {
+            flame.style.display = 'none';
+            flame.classList.remove('candle-flame');
+            checkAllCandlesBlown();
+          }
+        });
+      });
+    }
+
+    // 检查是否所有蜡烛都被吹灭
+    function checkAllCandlesBlown() {
+      const flames = document.querySelectorAll('.candle-flame');
+      const allBlown = Array.from(flames).every(flame => flame.style.display === 'none');
+      
+      if (allBlown) {
+        // 播放音乐
+        birthdaySong.play();
+        isPlaying = true;
+        musicStatus.textContent = '暂停音乐';
+        
+        // 放烟花
+        for (let i = 0; i < 8; i++) {
+          setTimeout(createFirework, i * 200);
+        }
+        
+        setTimeout(() => {
+          alert('生日快乐！愿你的所有愿望都能实现！');
+        }, 500);
+      }
+    }
+
+    // 创建烟花
+    function createFirework() {
+      const container = document.getElementById('fireworks-container');
+      const firework = document.createElement('div');
+      firework.classList.add('firework');
+      
+      const x = Math.random() * 100;
+      const y = Math.random() * 60 + 10;
+      const hue = Math.random() * 360;
+      const size = Math.random() * 100 + 100;
+      
+      firework.style.left = `${x}%`;
+      firework.style.top = `${y}%`;
+      firework.style.width = '5px';
+      firework.style.height = '5px';
+      firework.style.backgroundColor = `hsl(${hue}, 100%, 50%)`;
+      firework.style.borderRadius = '50%';
+      
+      container.appendChild(firework);
+      
+      setTimeout(() => {
+        firework.style.transition = 'all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        firework.style.width = `${size}px`;
+        firework.style.height = `${size}px`;
+        firework.style.opacity = '0';
+        firework.style.boxShadow = `
+          0 0 40px 10px hsl(${hue}, 100%, 50%),
+          0 0 60px 20px hsl(${hue}, 100%, 60%),
+          0 0 80px 30px hsl(${hue}, 100%, 70%)
+        `;
+      }, 10);
+      
+      setTimeout(() => {
+        if (container.contains(firework)) {
+          container.removeChild(firework);
+        }
+      }, 1500);
+    }
+
+    document.getElementById('firework-btn').addEventListener('click', () => {
+      for (let i = 0; i < 5; i++) {
+        setTimeout(createFirework, i * 300);
+      }
+    });
+
+    window.addEventListener('load', () => {
+      createHearts();
+      setupCandles();
+      // 已删除随机熄灭火焰的代码，所有蜡烛默认点燃
+    });
+  </script>
+</body>
+</html>
