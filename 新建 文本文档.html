@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>王心雨 生日快乐</title>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: linear-gradient(135deg, #000000 0%, #2c3e50 100%); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: "Microsoft YaHei", "Heiti SC", "WenQuanYi Micro Hei", sans-serif; /* 补充中文字体兼容 */
+            overflow: hidden; /* 防止turtle画布溢出导致滚动条 */
+        }
+        .title {
+            color: #ff69b4;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493;
+            z-index: 10; /* 确保标题在turtle画布上方 */
+        }
+        .title h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .title p { font-size: 1.2rem; color: #ffffff; opacity: 0.9; }
+        .loading {
+            color: #ffffff;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+            z-index: 10; /* 加载提示在顶层 */
+        }
+        /* 音乐控制按钮 */
+        .music-control {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 105, 180, 0.3);
+            border: none;
+            color: #ffffff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 100; /* 确保按钮在最顶层 */
+        }
+        .music-control:hover {
+            background: rgba(255, 105, 180, 0.6);
+            transform: scale(1.1);
+        }
+        /* 适配turtle画布的位置（避免被标题遮挡） */
+        #py-repl {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5; /* 画布在标题下方 */
+        }
+        @media (max-width: 768px) {
+            .title h1 { font-size: 2rem; }
+            .title p { font-size: 1rem; }
+            .music-control { width: 40px; height: 40px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">
+        <h1>王心雨 生日快乐</h1>
+        <p>点击画面触发烟花 ✨ 愿你永远被幸福包围</p>
+    </div>
+
+    <div class="loading" id="loading">加载中... 请稍候</div>
+
+    <!-- 生日音乐（使用更稳定的音频源示例） -->
+    <audio id="birthdayMusic" loop preload="auto">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-tune-2807.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-tune-2807.ogg" type="audio/ogg">
+        您的浏览器不支持音频播放
+    </audio>
+
+    <!-- 音乐控制按钮 -->
+    <button class="music-control" id="musicBtn" onclick="toggleMusic()">▶️</button>
+
+    <py-script>
+        import turtle
+        import random
+        import math
+        from pyscript import document, window
+
+        # 初始化窗口（适配浏览器，移除不兼容属性）
+        win = turtle.Screen()
+        win.bgcolor("#000000")
+        win.setup(width=800, height=600)  # 画布尺寸
+        win.tracer(0)  # 关闭自动刷新，提升性能
+
+        pen = turtle.Turtle()
+        pen.hideturtle()
+        pen.speed(0)  # 最快速度
+        pen.pensize(2)
+
+        # 存储烟花turtle对象，避免重复创建（优化性能）
+        firework_turtles = []
+        # 预先创建50个turtle（减少每次点击的创建开销）
+        for _ in range(50):
+            fire = turtle.Turtle()
+            fire.hideturtle()
+            fire.penup()
+            fire.speed(0)
+            firework_turtles.append(fire)
+
+        # 1. 绘制爱心
+        def draw_heart(x, y, size, color):
+            pen.penup()
+            pen.goto(x, y)
+            pen.pendown()
+            pen.color(color)
+            pen.begin_fill()
+            pen.setheading(140)
+            for _ in range(2):
+                pen.circle(size, 200)
+                pen.left(120)
+            pen.end_fill()
+
+        # 2. 绘制蛋糕
+        def draw_cake():
+            # 底座
+            pen.penup()
+            pen.goto(-100, -200)
+            pen.pendown()
+            pen.color("#D2691E")
+            pen.begin_fill()
+            for _ in range(2):
+                pen.forward(200)
+                pen.left(90)
+                pen.forward(80)
+                pen.left(90)
+            pen.end_fill()
+            # 上层
+            pen.penup()
+            pen.goto(-90, -120)
+            pen.pendown()
+            pen.color("#8B4513")
+            pen.begin_fill()
+            for _ in range(2):
+                pen.forward(180)
+                pen.left(90)
+                pen.forward(70)
+                pen.left(90)
+            pen.end_fill()
+            # 奶油
+            pen.penup()
+            pen.goto(-90, -50)
+            pen.pendown()
+            pen.color("#FFFFFF")
+            pen.begin_fill()
+            pen.circle(90, 180)
+            pen.left(180)
+            pen.forward(180)
+            pen.end_fill()
+            # 蜡烛
+            candle_colors = ["#FF0000", "#FFA500", "#FFFF00", "#00FF00", "#0000FF"]
+            for i in range(5):
+                x = -60 + i * 30
+                pen.penup()
+                pen.goto(x, -50)
+                pen.pendown()
+                pen.color(candle_colors[i])
+                pen.begin_fill()
+                for _ in range(2):
+                    pen.forward(10)
+                    pen.left(90)
+                    pen.forward(40)
+                    pen.left(90)
+                pen.end_fill()
+                # 火焰
+                pen.penup()
+                pen.goto(x + 5, 10)
+                pen.pendown()
+                pen.color("#FFD700")
+                pen.begin_fill()
+                pen.circle(5)
+                pen.end_fill()
+                pen.penup()
+                pen.goto(x + 4, 15)
+                pen.pendown()
+                pen.color("#FFA500")
+                pen.begin_fill()
+                pen.circle(3)
+                pen.end_fill()
+
+        # 3. 烟花效果（优化：复用turtle对象，减少性能消耗）
+        def draw_firework(x, y):
+            # 随机颜色列表
+            colors = ["#FF0000", "#FF69B4", "#FFD700", "#00FF00", "#1E90FF", "#9370DB", "#FF4500", "#8A2BE2"]
+            # 为每个预创建的turtle分配随机角度和颜色
+            for fire in firework_turtles:
+                fire.clear()  # 清除之前的绘制
+                fire.color(random.choice(colors))
+                fire.penup()
+                fire.goto(x, y)  # 回到烟花爆发点
+            
+            # 绘制烟花扩散效果
+            for t in range(40):  # 减少扩散帧数，提升流畅度
+                for fire in firework_turtles:
+                    angle = random.uniform(0, 2 * math.pi)
+                    distance = t * 2.2  # 调整扩散速度
+                    fire.goto(x + distance * math.cos(angle), y + distance * math.sin(angle))
+                    fire.pendown()
+                    fire.dot(3)
+                win.update()  # 手动刷新画面
+                
+            # 清除烟花残留
+            for fire in firework_turtles:
+                fire.clear()
+
+        # 4. 绘制文字（优化字体兼容性）
+        def draw_text():
+            pen.penup()
+            pen.goto(0, 160)
+            pen.pendown()
+            pen.color("#FF69B4")
+            # 补充跨平台字体
+            pen.write("王心雨 生日快乐！", align="center", font=("Microsoft YaHei", 32, "bold"))
+            pen.penup()
+            pen.goto(0, 120)
+            pen.pendown()
+            pen.color("#FFFFFF")
+            pen.write("愿你被爱包围，永远开心", align="center", font=("Microsoft YaHei", 18, "normal"))
+
+        # 组装运行（绘制完成后隐藏加载提示）
+        draw_cake()
+        draw_heart(0, -60, 20, "#FF69B4")
+        draw_text()
+        win.update()  # 手动刷新一次
+        # 隐藏加载提示（确保绘制完成后再隐藏）
+        document.getElementById("loading").style.display = "none"
+        # 绑定点击事件触发烟花
+        win.onscreenclick(draw_firework)
+
+        # 启动turtle主循环（替换turtle.done()，适配PyScript）
+        win.mainloop()
+    </py-script>
+
+    <!-- 音乐控制脚本 -->
+    <script>
+        const music = document.getElementById("birthdayMusic");
+        const musicBtn = document.getElementById("musicBtn");
+        let isPlaying = false;
+
+        // 页面加载完成后尝试自动播放（兼容浏览器策略）
+        window.onload = function() {
+            // 触发用户交互后自动播放（解决浏览器自动播放限制）
+            document.body.addEventListener("click", initMusic, { once: true });
+        };
+
+        // 初始化音乐播放
+        function initMusic() {
+            if (!isPlaying) {
+                music.volume = 0.3; // 音量设为30%
+                music.play().then(() => {
+                    isPlaying = true;
+                    musicBtn.innerText = "⏸️";
+                }).catch(err => {
+                    console.log("需要用户手动点击播放按钮：", err);
+                });
+            }
+        }
+
+        // 切换播放/暂停
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                musicBtn.innerText = "▶️";
+            } else {
+                music.volume = 0.3;
+                music.play();
+                musicBtn.innerText = "⏸️";
+            }
+            isPlaying = !isPlaying;
+        }
+    </script>
+</body>
+</html>
