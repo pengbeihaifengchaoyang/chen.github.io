@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情人节纪念 - 给我的宝贝 ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 全局样式 */
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            overflow: hidden;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            height: 100vh;
+            color: #333;
+        }
+
+        /* 初始页面样式 */
+        .start-page {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .start-page h1 {
+            font-size: 3rem;
+            color: #e63946;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .start-page p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #555;
+        }
+
+        .play-btn {
+            padding: 15px 40px;
+            background: #e63946;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+        }
+
+        .play-btn:hover {
+            background: #d62828;
+            transform: scale(1.05);
+        }
+
+        /* 问答页面样式 */
+        .quiz-page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .question-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #e63946;
+            text-align: center;
+        }
+
+        .options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .option-btn {
+            padding: 10px 25px;
+            background: #f8edeb;
+            border: 2px solid #e63946;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background: #e63946;
+            color: white;
+        }
+
+        .answer-tip {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #666;
+            text-align: center;
+            display: none;
+        }
+
+        .next-btn {
+            margin-top: 20px;
+            padding: 10px 30px;
+            background: #457b9d;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            background: #1d3557;
+            transform: scale(1.05);
+        }
+
+        /* 结束页面样式 */
+        .end-page {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .end-page h2 {
+            font-size: 2.5rem;
+            color: #e63946;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .love-text {
+            font-size: 1.5rem;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        /* 烟花、玫瑰特效容器 */
+        #fireworks, #roses {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 音频样式（隐藏默认控件，只保留后台播放） */
+        audio {
+            display: none;
+        }
+
+        /* 适配手机 */
+        @media (max-width: 768px) {
+            .start-page h1 {
+                font-size: 2rem;
+            }
+            .question-card h3 {
+                font-size: 1.2rem;
+            }
+            .end-page h2 {
+                font-size: 2rem;
+            }
+            .love-text {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 烟花和玫瑰特效容器 -->
+    <div id="fireworks"></div>
+    <div id="roses"></div>
+
+    <!-- 音频播放 -->
+    <audio id="bgm" loop>
+        <!-- 替换成你的音频文件路径，比如 "love_song.mp3" -->
+        <source src="宝宝.mp3" type="audio/mpeg">
+        你的浏览器不支持音频播放，请更换浏览器~
+    </audio>
+
+    <!-- 初始页面 -->
+    <div class="start-page" id="startPage">
+        <h1>致我的小树林宝宝 💌</h1>
+        <p>点击下方按钮，开启属于我们的情人节纪念 ✨</p>
+        <button class="play-btn" id="playBtn">播放音乐，开启回忆</button>
+    </div>
+
+    <!-- 问答页面 -->
+    <div class="quiz-page" id="quizPage">
+        <!-- 问题1：你觉得我喜欢你有多少 -->
+        <div class="question-card" id="q1">
+            <h3>💖 你觉得我喜欢你有多少？</h3>
+            <div class="options">
+                <button class="option-btn" onclick="showAnswer('q1', '多到数不清啦～从见你的第一眼就开始喜欢你，这份喜欢只会越来越多 ❤️')">很多</button>
+                <button class="option-btn" onclick="showAnswer('q1', '不止一点点哦～是满到快要溢出来的喜欢 💓')">一点点</button>
+                <button class="option-btn" onclick="showAnswer('q1', '比全世界的星星还要多～我的喜欢只属于你 ✨')">超级多</button>
+            </div>
+            <div class="answer-tip" id="q1Answer"></div>
+            <button class="next-btn" id="q1Next" onclick="nextQuestion(1)">下一个问题 →</button>
+        </div>
+
+        <!-- 问题2：我们在一起多久了 -->
+        <div class="question-card" id="q2" style="display: none;">
+            <h3>📅 我们在一起多久了？</h3>
+            <div class="options">
+                <button class="option-btn" onclick="showAnswer('q2', calcTogetherDays())">算一算</button>
+            </div>
+            <div class="answer-tip" id="q2Answer"></div>
+            <button class="next-btn" id="q2Next" onclick="nextQuestion(2)">下一个问题 →</button>
+        </div>
+
+        <!-- 问题3：愿不愿意下个学期上课一起坐 -->
+        <div class="question-card" id="q3" style="display: none;">
+            <h3>💺 愿不愿意下个学期上课一起坐？</h3>
+            <div class="options">
+                <button class="option-btn" onclick="showAnswer('q3', '超愿意！想每天上课都挨着你，偷偷看你认真的样子 🥰')">愿意</button>
+                <button class="option-btn" onclick="showAnswer('q3', '就算你说不愿意，我也会偷偷坐你旁边～反正就是要和你一起 💪')">不愿意</button>
+            </div>
+            <div class="answer-tip" id="q3Answer"></div>
+            <button class="next-btn" id="q3Next" onclick="showEndPage()">查看我的心意 💘</button>
+        </div>
+    </div>
+
+    <!-- 结束页面 -->
+    <div class="end-page" id="endPage">
+        <h2>❤️ 致我最爱的你 ❤️</h2>
+        <div class="love-text">
+            宝宝，虽然我们现在还不在一个地方，但我的心永远和你在一起<br>
+            从2026年1月16日开始，每一天的喜欢都在加倍<br>
+            情人节快乐～未来的日子，我想和你一起走下去<br>
+            不管是上课坐一起，还是走过更多的日子，我的爱只属于你 💞
+        </div>
+    </div>
+
+    <script>
+        // 核心元素获取
+        const bgm = document.getElementById('bgm');
+        const startPage = document.getElementById('startPage');
+        const quizPage = document.getElementById('quizPage');
+        const endPage = document.getElementById('endPage');
+        const playBtn = document.getElementById('playBtn');
+
+        // 播放音乐并跳转到问答页
+        playBtn.addEventListener('click', () => {
+            bgm.play(); // 播放音乐（循环）
+            startPage.style.display = 'none';
+            quizPage.style.display = 'flex';
+        });
+
+        // 显示问题答案
+        function showAnswer(questionId, answerText) {
+            const answerEl = document.getElementById(`${questionId}Answer`);
+            const nextBtn = document.getElementById(`${questionId}Next`);
+            answerEl.style.display = 'block';
+            answerEl.textContent = answerText;
+            nextBtn.style.display = 'block';
+        }
+
+        // 切换到下一个问题
+        function nextQuestion(questionNum) {
+            // 隐藏当前问题
+            document.getElementById(`q${questionNum}`).style.display = 'none';
+            // 显示下一个问题
+            document.getElementById(`q${questionNum + 1}`).style.display = 'block';
+        }
+
+        // 计算在一起的天数（核心：2026年1月16日开始，包含开始日，包含今天）
+        function calcTogetherDays() {
+            // 开始日期：2026年1月16日（注意月份是0开始，所以1月写0）
+            const startDate = new Date(2026, 0, 16);
+            // 今天日期
+            const today = new Date();
+            // 计算毫秒差 → 转天数
+            const diffTime = Math.abs(today - startDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            return `我们从2026年1月16日开始在一起（包含开始日和今天），到今天已经是第 ${diffDays} 天啦～每一天都超甜 💖`;
+        }
+
+        // 显示结束页面并触发特效
+        function showEndPage() {
+            quizPage.style.display = 'none';
+            endPage.style.display = 'flex';
+            // 触发烟花和玫瑰特效
+            createFireworks();
+            createRoses();
+        }
+
+        // 烟花特效（简化版，浪漫不复杂）
+        function createFireworks() {
+            const fireworksContainer = document.getElementById('fireworks');
+            const colors = ['#ff0000', '#ff9900', '#ffff00', '#00ff00', '#0099ff', '#9900ff'];
+            
+            // 生成10个烟花
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    const size = Math.random() * 100 + 50;
+                    const top = Math.random() * 80 + 10;
+                    const left = Math.random() * 80 + 10;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+
+                    firework.style.position = 'absolute';
+                    firework.style.width = `${size}px`;
+                    firework.style.height = `${size}px`;
+                    firework.style.borderRadius = '50%';
+                    firework.style.background = `radial-gradient(${color}, transparent 70%)`;
+                    firework.style.top = `${top}%`;
+                    firework.style.left = `${left}%`;
+                    firework.style.opacity = '0';
+                    firework.style.animation = 'firework 2s ease-out forwards';
+                    
+                    fireworksContainer.appendChild(firework);
+
+                    // 动画结束后移除
+                    setTimeout(() => {
+                        firework.remove();
+                    }, 2000);
+                }, i * 300);
+            }
+
+            // 添加烟花动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes firework {
+                    0% { opacity: 0; transform: scale(0); }
+                    50% { opacity: 1; transform: scale(1); }
+                    100% { opacity: 0; transform: scale(1.5); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // 玫瑰特效（生成散落的玫瑰图标）
+        function createRoses() {
+            const rosesContainer = document.getElementById('roses');
+            const roseCount = 20; // 生成20朵玫瑰
+
+            for (let i = 0; i < roseCount; i++) {
+                const rose = document.createElement('div');
+                // 用玫瑰emoji作为内容，也可以替换成图片
+                rose.textContent = '🌹';
+                rose.style.position = 'absolute';
+                rose.style.fontSize = `${Math.random() * 20 + 10}px`;
+                rose.style.top = `${Math.random() * 100}%`;
+                rose.style.left = `${Math.random() * 100}%`;
+                rose.style.opacity = '0';
+                rose.style.animation = `roseFall ${Math.random() * 5 + 3}s linear forwards`;
+                
+                rosesContainer.appendChild(rose);
+            }
+
+            // 添加玫瑰下落动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes roseFall {
+                    0% { opacity: 0; transform: translateY(-20px); }
+                    10% { opacity: 1; }
+                    90% { opacity: 1; }
+                    100% { opacity: 0; transform: translateY(100vh); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
+</body>
+</html>
